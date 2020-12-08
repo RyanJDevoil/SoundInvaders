@@ -45,20 +45,39 @@ public class Movement : MonoBehaviour
         if (!FreeTrackClientDll.FTGetData(ref FreeTrackData))
         {
             Debug.Log("FTGetData returned false. FreeTrack likely not working.");
-            return;
         }
         FreeTrackClientDll.FTGetData(ref FreeTrackData);
-
         float Yaw = FreeTrackData.Yaw;
         float rotateHorizontal = Input.GetAxis("Mouse X");
         Vector3 yawVector = new Vector3(0, (prevYaw - Yaw), 0);
         cameraTransform.Rotate((transform.up * rotateHorizontal * sensitivity) + yawVector * 35);
+        //cameraTransform.Rotate((transform.up * rotateHorizontal * sensitivity));
         prevYaw = Yaw;
-        //cameraTransform.Rotate((transform.up * rotateHorizontal * sensitivity)-yawVector*35);
-        //cameraTransform.Rotate(-yawVector * 35);
+
     }
-    void FixedUpdate()
+    void LateUpdate()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            SetCursorLock(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SetCursorLock(false);
+        }
     }
+    private void SetCursorLock(bool lockCursor)
+    {
+        if (lockCursor)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+
 }

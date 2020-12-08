@@ -25,16 +25,6 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-#if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
-        {
-            SetCursorLock(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SetCursorLock(false);
-        }
-#endif
         while (curEnemies < curMaxEnemies){
             createEnemy(enemyBaseCopy);
             curEnemies = curEnemies + 1;
@@ -57,19 +47,6 @@ public class GameController : MonoBehaviour
         GameObject enemyClone = Instantiate(enemyBaseCopy, new Vector3(0, 0, 0), Quaternion.Euler(0, Random.Range(1, 360), 0));
         enemyClone.transform.GetChild(0).GetComponent<AudioSource>().enabled = true;
         enemyClone.transform.GetChild(0).GetComponent<EnemyMovement>().enabled = true;
-    }
-    private void SetCursorLock(bool lockCursor)
-    {
-        if (lockCursor)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
     }
     void OnCollisionEnter(Collision collision)
     {
