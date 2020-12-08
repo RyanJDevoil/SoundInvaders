@@ -35,14 +35,10 @@ public class Movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public float sensitivity;
     public Transform cameraTransform;
     private float prevYaw = 0;
-    void FixedUpdate()
+    void Update()
     {
         FreeTrackClientDll.FreeTrackData FreeTrackData;
         FreeTrackData = new FreeTrackClientDll.FreeTrackData();
@@ -55,9 +51,14 @@ public class Movement : MonoBehaviour
 
         float Yaw = FreeTrackData.Yaw;
         float rotateHorizontal = Input.GetAxis("Mouse X");
-        Vector3 yawVector = new Vector3(0, (Yaw-prevYaw), 0);
+        Vector3 yawVector = new Vector3(0, (prevYaw - Yaw), 0);
+        cameraTransform.Rotate((transform.up * rotateHorizontal * sensitivity) + yawVector * 35);
         prevYaw = Yaw;
-        cameraTransform.Rotate((transform.up * rotateHorizontal * sensitivity)-yawVector*35);
+        //cameraTransform.Rotate((transform.up * rotateHorizontal * sensitivity)-yawVector*35);
         //cameraTransform.Rotate(-yawVector * 35);
+    }
+    void FixedUpdate()
+    {
+        
     }
 }
