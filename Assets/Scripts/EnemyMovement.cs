@@ -7,7 +7,6 @@ public class EnemyMovement : MonoBehaviour
     // Start is called before the first frame update
     public Transform target;
 
-    public float spawnAngle;
     public float relToPlayer;
     void Start()
     {

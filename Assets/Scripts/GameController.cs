@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    // Start is called before the first frame update
     public GameObject enemyBaseCopy;
     public Camera player;
     public Text scoreUI;
     public Text healthUI;
     public Text ammoUI;
+    public Text hiScoreUI;
     public AudioSource gunSound;
     public AudioSource reloadSound;
     public AudioSource pain1Sound;
@@ -33,17 +34,24 @@ public class GameController : MonoBehaviour
     private bool dying = false;
 
     private string logPath = "gameLog.txt";
+    private string scoresPath = "scores.dat";
 
+    // Start is called before the first frame update
     void Start()
     {
-        //write load hiscore function
+        loadScores();
+        print(string.Join(", ", hiscores.hiscoreArray));
+
         StreamWriter logger = new StreamWriter(logPath, true);
         logger.WriteLine("Game start on " + System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
         logger.Close();
+
         curAmmo = maxAmmo;
+
         scoreUI.text = "Score: " + score.ToString();
         healthUI.text = "Health: " + health.ToString();
         ammoUI.text = "Ammo: " + curAmmo.ToString();
+        hiScoreUI.text = "HiScore: " + (hiscores.hiscoreArray[0]).ToString();
     }
 
     // Update is called once per frame
@@ -63,8 +71,13 @@ public class GameController : MonoBehaviour
                 {
                     Destroy(hit.transform.gameObject.transform.parent.gameObject);
                     curEnemies = curEnemies - 1;
+
                     score = score + 1;
                     scoreUI.text = "Score: " + score.ToString();
+                    if (score > hiscores.hiscoreArray[0])
+                    {
+                        hiScoreUI.text = "HiScore: " + score.ToString();
+                    }
                 }
             }
             else if (Input.GetMouseButtonDown(0) && curAmmo == 0 && reloading == false)
@@ -74,8 +87,8 @@ public class GameController : MonoBehaviour
             }
         }
         while (curEnemies < curMaxEnemies){
-            createEnemy(enemyBaseCopy);
             curEnemies = curEnemies + 1;
+            createEnemy(enemyBaseCopy);
         }
         curMaxEnemies = Mathf.Min(Mathf.FloorToInt((score + 5)/(5)), maxEnemies);
        
@@ -90,11 +103,10 @@ public class GameController : MonoBehaviour
         {
             relToPlayer += 360;
         }
-        print(relToPlayer);
+
         GameObject enemyClone = Instantiate(enemyBaseCopy, new Vector3(0, 0, 0), Quaternion.Euler(0, spawnAngle, 0));
         enemyClone.transform.GetChild(0).GetComponent<AudioSource>().enabled = true;
         enemyClone.transform.GetChild(0).GetComponent<EnemyMovement>().enabled = true;
-        enemyClone.transform.GetChild(0).GetComponent<EnemyMovement>().spawnAngle = spawnAngle;
         enemyClone.transform.GetChild(0).GetComponent<EnemyMovement>().relToPlayer = relToPlayer;
     }
     void OnCollisionEnter(Collision collision)
@@ -107,8 +119,10 @@ public class GameController : MonoBehaviour
             StreamWriter logger = new StreamWriter(logPath, true);
             logger.WriteLine(relEnemySpawnPos + "," + curMaxEnemies + "," + curScore);
             logger.Close();
+
             Destroy(collision.gameObject.transform.parent.gameObject);
             curEnemies = curEnemies - 1;
+
             health = health - 1;
             switch (health)
             {
@@ -140,14 +154,55 @@ public class GameController : MonoBehaviour
         dying = true;
         deathSound.Play();
         yield return new WaitWhile(() => deathSound.isPlaying);
+
         StreamWriter logger = new StreamWriter(logPath, true);
-        hiscores.addHiscoreData(hiscores.hiscores, score);
-        //write save function
-        print(string.Join(", ", hiscores.hiscores));
+        hiscores.addHiscoreData(hiscores.hiscoreArray, score);
+        if (hiscores.newHiScore)
+        {
+            saveScores();
+            print("SAVED");
+        }
+        print(string.Join(", ", hiscores.hiscoreArray));
+
         logger.WriteLine("");
         logger.Close();
+
         SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
 
+    }
+    private void saveScores()
+    {
+        FileStream scoreFile;
+
+        if (File.Exists(scoresPath))
+        {
+            scoreFile = File.OpenWrite(scoresPath);
+        }
+        else
+        {
+            scoreFile = File.Create(scoresPath);
+        }
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(scoreFile, hiscores);
+        scoreFile.Close();
+    }
+    private void loadScores()
+    {
+        FileStream scoreFile;
+
+        if (File.Exists(scoresPath))
+        {
+            scoreFile = File.OpenRead(scoresPath);
+        }
+        else
+        {
+            Debug.LogError("File not found");
+            return;
+        }
+        BinaryFormatter bf = new BinaryFormatter();
+        hiscores = (hiscoreData)bf.Deserialize(scoreFile);
+        scoreFile.Close();
+        print("Done loading");
     }
 }
 

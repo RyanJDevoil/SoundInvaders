@@ -1,23 +1,24 @@
 ﻿[System.Serializable]
 public class hiscoreData
 {
-    public int[] hiscores;
-    public bool newHighScore;
+    public int[] hiscoreArray;
+    public bool newHiScore;
 
     public hiscoreData()
     {
-        hiscores = new int[10];
-        newHighScore = false;
+        hiscoreArray = new int[10];
+        newHiScore = false;
     }
     public void addHiscoreData(int[] data, int scoreInt)
     {
-        for(int x = 0; x < hiscores.Length-1; x++)
+        newHiScore = false;
+        for(int x = 0; x < hiscoreArray.Length; x++)
         {
-            if (scoreInt > hiscores[x])
+            if (scoreInt > hiscoreArray[x])
             {
-                shiftarray(hiscores, x);
-                hiscores[x] = scoreInt;
-                newHighScore = true;
+                shiftarray(hiscoreArray, x);
+                hiscoreArray[x] = scoreInt;
+                newHiScore = true;
                 break;
             }
         }
@@ -32,7 +33,7 @@ public class hiscoreData
         }
         else
         {
-            shiftarray(hiscores, x + 1);
+            shiftarray(array, x + 1);
             array[x + 1] = array[x];
             return array;
         }
