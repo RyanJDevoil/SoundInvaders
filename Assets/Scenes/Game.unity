@@ -1375,8 +1375,8 @@ GameObject:
   - component: {fileID: 963194229}
   - component: {fileID: 963194234}
   - component: {fileID: 963194230}
-  - component: {fileID: 963194232}
   - component: {fileID: 963194233}
+  - component: {fileID: 963194231}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1490,8 +1490,8 @@ MonoBehaviour:
   recorderSeamless: 0
   recorderSourceTag: Untagged
   recorderFoldout: 1
---- !u!65 &963194232
-BoxCollider:
+--- !u!135 &963194231
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1501,7 +1501,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 2}
+  m_Radius: 1.75
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &963194233
 Rigidbody:
