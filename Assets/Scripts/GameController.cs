@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
     private int curMaxEnemies = 1;
     private int curEnemies = 0;
     private int curAmmo;
-    private hiscoreData hiscores = new hiscoreData();
+    private hiscoreData hiscores;
 
     private bool reloading = false;
     private bool dying = false;
@@ -39,7 +39,9 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        loadScores();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        hiscores = hiscoreData.loadScores(scoresPath);
         print(string.Join(", ", hiscores.hiscoreArray));
 
         StreamWriter logger = new StreamWriter(logPath, true);
@@ -157,9 +159,9 @@ public class GameController : MonoBehaviour
 
         StreamWriter logger = new StreamWriter(logPath, true);
         hiscores.addHiscoreData(hiscores.hiscoreArray, score);
-        if (hiscores.newHiScore)
+        if (hiscores.newHiscore)
         {
-            saveScores();
+            hiscoreData.saveScores(scoresPath, hiscores);
             print("SAVED");
         }
         print(string.Join(", ", hiscores.hiscoreArray));
@@ -170,39 +172,39 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
 
     }
-    private void saveScores()
-    {
-        FileStream scoreFile;
+    //private void saveScores()
+    //{
+    //    FileStream scoreFile;
 
-        if (File.Exists(scoresPath))
-        {
-            scoreFile = File.OpenWrite(scoresPath);
-        }
-        else
-        {
-            scoreFile = File.Create(scoresPath);
-        }
-        BinaryFormatter bf = new BinaryFormatter();
-        bf.Serialize(scoreFile, hiscores);
-        scoreFile.Close();
-    }
-    private void loadScores()
-    {
-        FileStream scoreFile;
+    //    if (File.Exists(scoresPath))
+    //    {
+    //        scoreFile = File.OpenWrite(scoresPath);
+    //    }
+    //    else
+    //    {
+    //        scoreFile = File.Create(scoresPath);
+    //    }
+    //    BinaryFormatter bf = new BinaryFormatter();
+    //    bf.Serialize(scoreFile, hiscores);
+    //    scoreFile.Close();
+    //}
+    //private void loadScores()
+    //{
+    //    FileStream scoreFile;
 
-        if (File.Exists(scoresPath))
-        {
-            scoreFile = File.OpenRead(scoresPath);
-        }
-        else
-        {
-            Debug.LogError("File not found");
-            return;
-        }
-        BinaryFormatter bf = new BinaryFormatter();
-        hiscores = (hiscoreData)bf.Deserialize(scoreFile);
-        scoreFile.Close();
-        print("Done loading");
-    }
+    //    if (File.Exists(scoresPath))
+    //    {
+    //        scoreFile = File.OpenRead(scoresPath);
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("File not found");
+    //        return;
+    //    }
+    //    BinaryFormatter bf = new BinaryFormatter();
+    //    hiscores = (hiscoreData)bf.Deserialize(scoreFile);
+    //    scoreFile.Close();
+    //    print("Done loading");
+    //}
 }
 

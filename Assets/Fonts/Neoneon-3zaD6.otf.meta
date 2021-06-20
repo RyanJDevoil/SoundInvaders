@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: afe7d18ecb63d2c479b00795f2529d82
+guid: c4a1a405de4a3184fbf52f614d55f8ab
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Franklin Gothic Medium Cond
+  fontName: Neoneon
   fontNames:
-  - Franklin Gothic Medium Cond
+  - Neoneon
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

@@ -1,28 +1,70 @@
-﻿[System.Serializable]
+﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
+
+[System.Serializable]
 public class hiscoreData
 {
     public int[] hiscoreArray;
-    public bool newHiScore;
+    public bool newHiscore;
+    public int hiScoreLocation;
 
     public hiscoreData()
     {
         hiscoreArray = new int[10];
-        newHiScore = false;
+        newHiscore = false;
+        hiScoreLocation = -1;
     }
     public void addHiscoreData(int[] data, int scoreInt)
     {
-        newHiScore = false;
+        newHiscore = false;
         for(int x = 0; x < hiscoreArray.Length; x++)
         {
             if (scoreInt > hiscoreArray[x])
             {
                 shiftarray(hiscoreArray, x);
                 hiscoreArray[x] = scoreInt;
-                newHiScore = true;
+                hiScoreLocation = x + 1;
+                newHiscore = true;
                 break;
             }
         }
 
+    }
+
+    public static void saveScores(string scoresPath, hiscoreData hiscores)
+    {
+        FileStream scoreFile;
+
+        if (File.Exists(scoresPath))
+        {
+            scoreFile = File.OpenWrite(scoresPath);
+        }
+        else
+        {
+            scoreFile = File.Create(scoresPath);
+        }
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(scoreFile, hiscores);
+        scoreFile.Close();
+    }
+    public static hiscoreData loadScores(string scoresPath)
+    {
+        FileStream scoreFile;
+
+        if (File.Exists(scoresPath))
+        {
+            scoreFile = File.OpenRead(scoresPath);
+        }
+        else
+        {
+            Debug.LogError("File not found");
+            return new hiscoreData();
+        }
+        BinaryFormatter bf = new BinaryFormatter();
+        hiscoreData hiscores = (hiscoreData)bf.Deserialize(scoreFile);
+        scoreFile.Close();
+        return hiscores;
     }
 
     private int[] shiftarray(int[] array, int x)
