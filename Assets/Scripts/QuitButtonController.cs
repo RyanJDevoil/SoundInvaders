@@ -9,15 +9,14 @@ public class QuitButtonController : MonoBehaviour, IPointerEnterHandler, IPointe
     public Text QuitButton;
     public void OnPointerEnter(PointerEventData eventData)
     {
-        QuitButton.color = new Color(255f / 255f, 0f / 255f, 0f / 255f); //Or however you do your color
+        QuitButton.color = new Color(255f / 255f, 0f / 255f, 0f / 255f);
     }
     public void OnPointerExit(PointerEventData eventData)
     {
-        QuitButton.color = Color.white; //Or however you do your color 
+        QuitButton.color = Color.white;
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        print("CLICK");
         Application.Quit();
     }
 }
