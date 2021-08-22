@@ -12,3 +12,5 @@ Oculus Audio Spatialization - https://developer.oculus.com/downloads/package/ocu
 To utilise these spatializers, you will need to enable the respective scripts on the player and enemy objects, as well as the cube in the main scene that acts as a reverb zone. You will also need to select the correct spatializer plugin and ambisonic decoder plugin within Edit > Project Settings > Audio
 
 For Resonance audio, the output of the enemy audio source should be set to Resonance Audio Mixer > Master
+
+If compiling for Linux, the movement script on the player object should be turned off, and the one specified for Linux enabled.
