@@ -33,7 +33,7 @@ public class GameController : MonoBehaviour
     private bool reloading = false;
     private bool dying = false;
 
-    private string logPath = "gameLog.txt";
+    private string logPath = "gameLog2.txt";
     private string scoresPath = "scores.dat";
 
     // Start is called before the first frame update
